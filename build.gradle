@@ -1,0 +1,72 @@
+group 'simple-demo'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+        springCloudVersion = 'Camden.RELEASE'
+        lombokVersion = '1.16.10'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    group 'simple-demo'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'spring-boot'
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    sourceCompatibility = 1.8
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+
+    jar {
+        baseName = project.name
+        version = project.version
+    }
+
+    dependencies {
+        compile('org.springframework.boot:spring-boot-starter-web')
+        compile "org.projectlombok:lombok:${lombokVersion}"
+        compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+        compile('org.springframework.cloud:spring-cloud-starter-zipkin')
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+}
+
+project(':catalog-service') {
+    mainClassName = "com.nklmish.cs.catalogs.Application"
+}
+
+project(':price-service') {
+    mainClassName = "com.nklmish.ps.prices.Application"
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
+}
